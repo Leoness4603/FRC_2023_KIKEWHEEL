@@ -4,17 +4,22 @@
 
 package frc.robot.commands;
 
+import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
 public class ArcadeDrive extends CommandBase {
   /** Creates a new ArcadeDrive. */
   private final Chassis chassisSubsystem;
-  private double movement;
-  private double rotation;
+  private Joystick joy;
+  private XboxController xboxController;
 
-  public ArcadeDrive(Chassis chassisSubsystem) {
+  public ArcadeDrive(Chassis chassisSubsystem, Joystick joy) {
     this.chassisSubsystem = chassisSubsystem;
+    this.joy = joy;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassisSubsystem);
   }
@@ -26,13 +31,10 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    movement = chassisSubsystem.getJoystick().getRawAxis(4);
-    rotation = chassisSubsystem.getJoystick().getRawAxis(5);
-
-    if (chassisSubsystem.getJoystick().getRawButton(3)) {
-      chassisSubsystem.driveAMAX(movement, rotation);
-    }else {
-      chassisSubsystem.driveA(movement, rotation);
+    if (joy.getRawAxis(3) > 0) {
+      chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), 1);
+    }else{
+      chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), .65);
     }
   }
 

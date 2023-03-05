@@ -5,15 +5,18 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 
-import frc.robot.Constants;
+import frc.robot.Constants.IoPWM;
 
 public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
-  private Spark motor = new Spark(Constants.IDcan.Claw.kCLAW_Motor);
-  private double Speed = .45;
+  private Spark clawMotor = new Spark(IoPWM.Claw.kCLAW_Motor);
+  private double Speed = 1;
   private Joystick firstTrigger;
   private Joystick secondTrigger;
 
@@ -36,15 +39,15 @@ public class Claw extends SubsystemBase {
     return this.secondTrigger;
   }
 
-  public void intake(boolean direction){
-    if (direction){
-      motor.set(-this.Speed);
-    }else{
-      motor.set(this.Speed);
-    }
+  public void open(){
+    clawMotor.set(-Speed);
   }
+  public void close() {
+    clawMotor.set(Speed);
+  } 
 
   public void stop(){
-    motor.set(0);
+    clawMotor.stopMotor();
   }
 }
+

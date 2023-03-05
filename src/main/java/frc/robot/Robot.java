@@ -5,23 +5,23 @@
 package frc.robot;
 
 
-import edu.wpi.first.cscore.CameraServerCvJNI;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.CurvatureDrive;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveClaw;
 import frc.robot.commands.MoveForearm;
-import frc.robot.commands.TankDrive;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Forearm;
+import frc.robot.commands.Auto.AutonomousDrive2;
 import frc.robot.commands.Auto.AutonomusDrive;
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -35,22 +35,20 @@ public class Robot extends TimedRobot {
   private Joystick driveJoystick = new Joystick(Constants.Joystick.kSecond_Joystick_Port);
   private Joystick secondJoystick = new Joystick(Constants.Joystick.kThird_Joystick_Port);
   
-  private Chassis chassis = new Chassis(driveJoystick);
+  private Chassis chassis = new Chassis();
   private Arm arm = new Arm(joystick);
   private Claw claw = new Claw(joystick, secondJoystick);
   private Forearm forearm = new Forearm(secondJoystick);
 
-  private ArcadeDrive arcadeDriveCommand = new ArcadeDrive(chassis);
-  private CurvatureDrive curvatureDriveCommand = new CurvatureDrive(chassis);
-  private TankDrive tankDriveCommand = new TankDrive(chassis);
+  private ArcadeDrive arcadeDriveCommand = new ArcadeDrive(chassis, driveJoystick);
   private MoveArm moveArmCommand = new MoveArm(arm);
   private MoveClaw moveClawCommand = new MoveClaw(claw);
   private MoveForearm moveForearmCommand = new MoveForearm(forearm);
-  private AutonomusDrive autonomousDriveCommand = new AutonomusDrive(chassis);
+  private AutonomousDrive2 autonomousDriveCommand = new AutonomousDrive2(chassis, forearm);
  
   private UsbCamera camera1;
   private UsbCamera camera2;
-  private VideoSink Server;
+  private VideoSink Server; 
 
   
 
@@ -59,7 +57,7 @@ public class Robot extends TimedRobot {
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
-    chassis.setDefaultCommand(curvatureDriveCommand);
+    chassis.setDefaultCommand(arcadeDriveCommand);
     claw.setDefaultCommand(moveClawCommand);
     arm.setDefaultCommand(moveArmCommand);
     forearm.setDefaultCommand(moveForearmCommand);
@@ -115,7 +113,6 @@ public class Robot extends TimedRobot {
     // teleop empiece a correr. si usted quiere ue autonomo continue
     // hasta que sea interrumpido por otro comando, quite
     // esta linea o comentelo afuera.
-
   }
 
   @Override

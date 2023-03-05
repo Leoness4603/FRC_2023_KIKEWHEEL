@@ -8,6 +8,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +20,7 @@ public class Arm extends SubsystemBase {
   private Joystick joystick;
   CANSparkMax motor = new CANSparkMax(Constants.IDcan.Arm.kARM_Motor, MotorType.kBrushed);
   
+  Gyro gyro;
 
   /** Creates a new IntakeWheels. */
   public Arm(Joystick joystick) {
@@ -38,7 +41,7 @@ public class Arm extends SubsystemBase {
   }
 
   public void stop(){
-    motor.set(0);
+    motor.stopMotor();
   }
 
 }

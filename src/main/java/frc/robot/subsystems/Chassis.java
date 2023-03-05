@@ -4,20 +4,35 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.VictorSPXConfiguration;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Constants;
 import frc.robot.Constants.DIO;
+import frc.robot.Constants.IDcan;
+import frc.robot.Constants.kChassis;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.AHRSProtocol;
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Chassis extends SubsystemBase {
   /** Creates a new Chassis. */
@@ -25,106 +40,73 @@ public class Chassis extends SubsystemBase {
   WPI_VictorSPX m_rear_left = new WPI_VictorSPX(Constants.IDcan.Chassis.m_rear_left);
   WPI_VictorSPX m_bhnd_left = new WPI_VictorSPX(Constants.IDcan.Chassis.m_bhnd_left);
   WPI_VictorSPX m_rear_right = new WPI_VictorSPX(Constants.IDcan.Chassis.m_rear_right);
-  WPI_VictorSPX m_bhnd_right = new WPI_VictorSPX(Constants.IDcan.Chassis.m_bhnd_right);
-
-  Encoder encoderRight = new Encoder(DIO.kEncoderRight, DIO.kEncoderRight2);
-  Encoder encoderLeft = new Encoder(DIO.kEncoderLeft, DIO.kEncoderLeft2);
+  CANSparkMax m_bhnd_right = new CANSparkMax(IDcan.Chassis.m_bhnd_right, MotorType.kBrushed);
+  
+  PIDController controllerChassis = new PIDController(kChassis.PIDValues.kP, kChassis.PIDValues.kI, kChassis.PIDValues.kD);
   
   AHRS ahrs;
-  Gyro gyro;
 
-  private Joystick drivejoystick;
+  PowerDistribution PDP = new PowerDistribution(0, ModuleType.kCTRE);
+
 
   private DifferentialDrive drive;
 
-  public Chassis(Joystick driveJoystick) {
+  public Chassis() {
+    m_rear_left.configFactoryDefault();
+    m_rear_right.configFactoryDefault();
     m_bhnd_left.follow(m_rear_left);
-    m_bhnd_right.follow(m_rear_right);
+
     MotorControllerGroup leftMotors = new MotorControllerGroup(m_rear_left, m_bhnd_left);
     MotorControllerGroup rightMotors = new MotorControllerGroup(m_rear_right, m_bhnd_right);
 
+    leftMotors.setInverted(true);
+    rightMotors.setInverted(false);
+
     drive = new DifferentialDrive(leftMotors, rightMotors);
 
-    encoderLeft.setDistancePerPulse(.001);
-    encoderRight.setDistancePerPulse(.001);
-
     ahrs = new AHRS(SPI.Port.kMXP);
-    
-    
-    this.drivejoystick = driveJoystick;
+    ahrs.calibrate();
+
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    ahrs.calibrate();
+    log();
   }
 
   public double getAngle() {
     return ahrs.getAngle();
   }
 
-  public double getDistanceR() {
-    return encoderRight.getDistance();
+  public Pose2d getPose(double x, double y, double xy) {
+    double displacementX = ahrs.getDisplacementY();
+    double displacementY = ahrs.getDisplacementX();
+    Rotation2d rotation = new Rotation2d(Units.degreesToRadians(ahrs.getAngle()));
+    return new Pose2d(displacementX, displacementY, rotation);
   }
 
-  public double getDistanceL() {
-    return encoderLeft.getDistance();
+  public void setPoint(double setPoint) {
+    controllerChassis.setSetpoint(setPoint);
   }
 
-  public double getAverageDistance() {
-    return (getDistanceL() + getDistanceR()) / 2;
+  public PIDController getChassisController() {
+    return controllerChassis;
   }
 
-  public void driveA(double movement, double rotation) {
-    this.drive.setMaxOutput(0.6);
-    this.drive.arcadeDrive(movement, rotation, true);
-    this.drive.feed();
-  }
-
-  public void driveAMAX(double movement, double rotation) {
-    this.drive.setMaxOutput(1);
-    this.drive.arcadeDrive(movement, rotation, true);
-    this.drive.feed();
-  }
-
-  public void driveT(double movement, double rotation) {
-    this.drive.setMaxOutput(0.6);
-    this.drive.tankDrive(movement, rotation, true);
-    this.drive.feed();
-  }
-
-  public void driveTMAX(double movement, double rotation) {
-    this.drive.setMaxOutput(1);
-    this.drive.tankDrive(movement, rotation, true);
-    this.drive.feed();
-  }
-
-  public void driveC(double movement, double rotation) {
-    this.drive.setMaxOutput(0.6);
-    this.drive.curvatureDrive(movement, rotation, false);
-    this.drive.feed();
-  }
-
-  public void driveCMEN(double movement, double rotation) {
-    this.drive.setMaxOutput(1);
-    this.drive.curvatureDrive(movement, rotation, false);
+  public void driveA(double movement, double rotation, double maxOutput) {
+    this.drive.setMaxOutput(maxOutput);
+    this.drive.arcadeDrive(movement , rotation);
     this.drive.feed();
   }
 
   public void log() {
-    SmartDashboard.putNumber("Distancia izquierda :", getDistanceL());
-    SmartDashboard.putNumber("Distancia derecha : ", getDistanceR());
     SmartDashboard.putBoolean("navX conectado", ahrs.isConnected());
+    SmartDashboard.putNumber("Total Current:", PDP.getTotalCurrent());
   }
   
   public void stop() {
-    this.drive.arcadeDrive(0, 0);
-    this.drive.curvatureDrive(0, 0, false);
-    this.drive.tankDrive(0, 0);
-  }
-
-  public Joystick getJoystick() {
-    return drivejoystick;
+    this.drive.stopMotor();
   }
 }
+

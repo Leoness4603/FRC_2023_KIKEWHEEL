@@ -10,23 +10,38 @@ public final class Constants {
   public final static class IDcan {
     public final static class Chassis {
       public final static int m_rear_left = 1;
-      public final static int m_bhnd_left = 4;
+      public final static int m_bhnd_left = 2;
       public final static int m_rear_right = 3;
-      public final static int m_bhnd_right = 2;
+      public final static int m_bhnd_right = 6;
     }
 
-    public final static class Claw {
-      public final static int kCLAW_Motor = 6;
-    }
     public final static class Arm {
       public final static int kARM_Motor = 5;
     }    
   }
+
+  public final static class ForeArm {
+    public final static class PIDValues{
+      public final static double kP = 0,
+                                 kI = 0,
+                                 kD = 0;
+    }
+  }
+
+  public final static class kChassis {
+    public final static class PIDValues {
+      public final static double kP = 0,
+                                 kI = 0,
+                                 kD = 0;
+    }
+  }
   
   public final static class IoPWM {
+    public final static class Claw {
+      public final static int kCLAW_Motor = 1;
+    }
     public final static class Forearm {
       public final static int kForearm_Motor = 0;
-      public final static int kForearm_Motor2 = 1;
     }
   }
   

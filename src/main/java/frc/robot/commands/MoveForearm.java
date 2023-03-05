@@ -25,16 +25,11 @@ public class MoveForearm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    turn = forearmSubsystem.getJoystick().getRawAxis(1) * .45;
+    turn = forearmSubsystem.getJoystick().getY();
     forearmSubsystem.log();
-    forearmSubsystem.ForearmMovement(turn);
-    if(forearmSubsystem.getDistanceArm() >= 5){
-         forearmSubsystem.ForearmMovement(turn -.1);
-    } else{
-      if(forearmSubsystem.getDistanceArm() <= -5){
-        forearmSubsystem.ForearmMovement(turn +.1);
-      }
-    }
+    if (forearmSubsystem.getJoystick().getY() > .08){
+    forearmSubsystem.ForearmMovement(-turn);
+    }    
   }
 //hola j
   // Called once the command ends or is interrupted.

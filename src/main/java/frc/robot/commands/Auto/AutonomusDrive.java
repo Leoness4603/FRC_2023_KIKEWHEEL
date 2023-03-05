@@ -22,11 +22,9 @@ public class AutonomusDrive extends CommandBase {
    
   public void chassisAuto() {
     if(encoderLeft.getDistance() < 3 && encoderRight.getDistance() < 3){
-      chassisSubsystem.driveA(.5, 0);
+      chassisSubsystem.driveA(.5, 0, 1);
     }else{
-      if(encoderLeft.getDistance() < 6 && encoderRight.getDistance() < 6){
-      chassisSubsystem.driveA(0, .5);
-      }
+      chassisSubsystem.stop();;
     }
   }
 
