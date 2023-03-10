@@ -40,10 +40,10 @@ public class Claw extends SubsystemBase {
   }
 
   public void open(){
-    clawMotor.set(-Speed);
-  }
+    clawMotor.set(-Speed * .65);
+  } 
   public void close() {
-    clawMotor.set(Speed);
+    clawMotor.set(Speed * .65);
   } 
 
   public void stop(){

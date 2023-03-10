@@ -62,8 +62,7 @@ public final class Constants {
   }
 
   public final static class Sensors{
-    public final static int kCameraID = 1;
-    public final static int kCameraID2 = 2;
+    public final static int kCameraID = 0;
   }
 
 }

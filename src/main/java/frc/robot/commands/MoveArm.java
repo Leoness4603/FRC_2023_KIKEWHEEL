@@ -25,7 +25,7 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      turn = armSubsystem.getJoystick().getY() * .65;
+      turn = armSubsystem.getJoystick().getY() * .8;
       if (armSubsystem.getJoystick().getY() > .08 || armSubsystem.getJoystick().getY() < .08) {
         armSubsystem.ArmMovement(-turn); 
       }

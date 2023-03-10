@@ -24,7 +24,7 @@ public class AutonomusDrive extends CommandBase {
     if(encoderLeft.getDistance() < 3 && encoderRight.getDistance() < 3){
       chassisSubsystem.driveA(.5, 0, 1);
     }else{
-      chassisSubsystem.stop();;
+      chassisSubsystem.stop();
     }
   }
 

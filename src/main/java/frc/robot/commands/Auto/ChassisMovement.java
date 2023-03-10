@@ -42,38 +42,22 @@ public class ChassisMovement extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /*switch (position) {
-      case 1:
-        
-        break;
-      case 2:
-
-        break;
-      
-      case 3:
-
-        break;
-      default:
-        break;
-    }*/
-    if(position == 1){
-      if (timer.get() < time) {
-        chassis.driveA(.5, 0, 1);
+   /* if(position == 1){
+      chassis.driveA(.5, 0, .4);
     }else{
-      if(position == 2){
-        if (timer.get() < time) {
-          chassis.driveA(.5, 0, 1);
-      }
-      }else{
-        if(position == 3){
-          if (timer.get() < time) {
-            chassis.driveA(.5, 0, 1);
-        }
-        }
-      }
+    if(position == 2){
+      chassis.driveA(.5, 0, .4);
+    }else{
+      
+    if(position == 3){
+      chassis.driveA(.5, 0, .4);
     }
-    }
+  } */
   }
+
+
+  
+  
 
   // Called once the command ends or is interrupted.
   @Override
