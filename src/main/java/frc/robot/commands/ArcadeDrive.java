@@ -36,8 +36,11 @@ public class ArcadeDrive extends CommandBase {
     }else{
       chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * .45, .65);
     }*/
-    chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), 0.6);
+    if(joy.getRawAxis(3) < 1){
+      chassisSubsystem.driveA(-joy.getRawAxis(1) * .6, joy.getRawAxis(4), 1);
+    }else{chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * 1.3, 0.6);
   }
+}  
 
   // Called once the command ends or is interrupted.
   @Override

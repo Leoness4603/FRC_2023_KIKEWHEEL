@@ -21,7 +21,6 @@ import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Claw;
 import frc.robot.subsystems.Forearm;
-import frc.robot.commands.Auto.AutonomousDrive2;
 import frc.robot.commands.Auto.AutonomusDrive;
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -44,7 +43,7 @@ public class Robot extends TimedRobot {
   private MoveArm moveArmCommand = new MoveArm(arm);
   private MoveClaw moveClawCommand = new MoveClaw(claw);
   private MoveForearm moveForearmCommand = new MoveForearm(forearm);
-  private AutonomousDrive2 autonomousDriveCommand = new AutonomousDrive2(chassis, forearm);
+  private AutonomusDrive autonomusDrive = new AutonomusDrive(chassis);
  
   private UsbCamera camera1;
   private UsbCamera camera2;
@@ -89,7 +88,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    chassis.setDefaultCommand(autonomousDriveCommand);
+    chassis.setDefaultCommand(autonomusDrive);
 
     // schedule the autonomous command (example)
   }

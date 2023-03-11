@@ -79,13 +79,6 @@ public class Chassis extends SubsystemBase {
     return ahrs.getAngle();
   }
 
-  public Pose2d getPose(double x, double y, double xy) {
-    double displacementX = ahrs.getDisplacementY();
-    double displacementY = ahrs.getDisplacementX();
-    Rotation2d rotation = new Rotation2d(Units.degreesToRadians(ahrs.getAngle()));
-    return new Pose2d(displacementX, displacementY, rotation);
-  }
-
   public void setPoint(double setPoint) {
     controllerChassis.setSetpoint(setPoint);
   }
