@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.lang.model.util.ElementScanner14;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Claw;
 
@@ -26,14 +24,12 @@ public class MoveClaw extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(claw.getJoystick().getTrigger()){
+    if(claw.getJoystick().getTrigger() || claw.getSecondJoystick().getRawButton(2)){
       claw.open();
-    }else{
-      if (claw.getSecondJoystick().getTrigger() || claw.getJoystick().getRawButton(2)) {
-        claw.close();
-      } else {
-        claw.stop();      
-      }
+    }else if (claw.getSecondJoystick().getTrigger() || claw.getJoystick().getRawButton(2)) {
+      claw.close();
+    } else {
+      claw.stop();      
     }
   }
 

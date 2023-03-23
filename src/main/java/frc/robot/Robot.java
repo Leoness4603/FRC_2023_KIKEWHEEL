@@ -9,26 +9,18 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.VideoSink;
 import edu.wpi.first.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.wpilibj.Joystick;
-
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.MoveArm;
 import frc.robot.commands.MoveClaw;
-import frc.robot.commands.MoveForearm;
 import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Claw;
-import frc.robot.subsystems.Forearm;
 import frc.robot.commands.Auto.AutonomusDrive;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.cameraserver.CameraServer;
 
-
-/**
- * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
- * arcade steering.
- */
 public class Robot extends TimedRobot {
   private Joystick joystick = new Joystick(Constants.Joystick.kJoystick_Port);
   private Joystick driveJoystick = new Joystick(Constants.Joystick.kSecond_Joystick_Port);
@@ -37,13 +29,13 @@ public class Robot extends TimedRobot {
   private Chassis chassis = new Chassis();
   private Arm arm = new Arm(joystick);
   private Claw claw = new Claw(joystick, secondJoystick);
-  private Forearm forearm = new Forearm(secondJoystick);
 
   private ArcadeDrive arcadeDriveCommand = new ArcadeDrive(chassis, driveJoystick);
   private MoveArm moveArmCommand = new MoveArm(arm);
   private MoveClaw moveClawCommand = new MoveClaw(claw);
-  private MoveForearm moveForearmCommand = new MoveForearm(forearm);
-  private AutonomusDrive autonomusDrive = new AutonomusDrive(chassis);
+  private AutonomusDrive autonomusDriveCommand = new AutonomusDrive(chassis);
+
+  private Timer autoTimer = new Timer();
  
   private UsbCamera camera1;
   private UsbCamera camera2;
@@ -59,7 +51,6 @@ public class Robot extends TimedRobot {
     chassis.setDefaultCommand(arcadeDriveCommand);
     claw.setDefaultCommand(moveClawCommand);
     arm.setDefaultCommand(moveArmCommand);
-    forearm.setDefaultCommand(moveForearmCommand);
     
     camera1 = CameraServer.startAutomaticCapture();
     camera1.setResolution(10, 30);
@@ -88,15 +79,23 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    chassis.setDefaultCommand(autonomusDrive);
-
+    autoTimer.start();
     // schedule the autonomous command (example)
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-
+    if(autoTimer.get() < .6){
+      claw.open();
+    }else if (autoTimer.get() < 1.75) {
+      chassis.driveA(-1, 0, 0.5);
+    }else if (autoTimer.get() < 2 ){
+      chassis.driveA(0, 1, 0.5);
+    }else if(autoTimer.get() > 2){
+      chassis.stop();
+    }
+    
   }
 
 

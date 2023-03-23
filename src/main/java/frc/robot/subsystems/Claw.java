@@ -5,18 +5,17 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-
+import frc.robot.Constants;
 import frc.robot.Constants.IoPWM;
 
 public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
+  // declara argumentos de la garra
   private Spark clawMotor = new Spark(IoPWM.Claw.kCLAW_Motor);
-  private double Speed = 1;
+  private double Speed = .99;
+  private double maxOutput = Constants.SubsystemMaxOutput.kClaw_MaxOutput;
   private Joystick firstTrigger;
   private Joystick secondTrigger;
 
@@ -40,10 +39,10 @@ public class Claw extends SubsystemBase {
   }
 
   public void open(){
-    clawMotor.set(-Speed * .65);
+    clawMotor.set(-Speed * maxOutput);
   } 
   public void close() {
-    clawMotor.set(Speed * .65);
+    clawMotor.set(Speed * maxOutput);
   } 
 
   public void stop(){

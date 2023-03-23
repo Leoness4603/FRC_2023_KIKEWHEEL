@@ -5,12 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.SubsystemMaxOutput;
 import frc.robot.subsystems.Forearm;
 
 public class MoveForearm extends CommandBase {
   /** Creates a new MoveForearm. */
   private Forearm forearmSubsystem;
   private double turn;
+  private double maxOutput;
 
   public MoveForearm(Forearm forearmSubsystem) {
     this.forearmSubsystem = forearmSubsystem;
@@ -30,9 +32,11 @@ public void execute() {/*
     if (forearmSubsystem.getJoystick().getY() > .08){
     forearmSubsystem.ForearmMovement(-turn);
     }    */
-    turn = forearmSubsystem.getJoystick().getY();
+    turn = forearmSubsystem.getJoystick().getY() * .55;
+    maxOutput = SubsystemMaxOutput.kForearm_MaxOutput;
+    
     if (forearmSubsystem.getJoystick().getY() > .08 || forearmSubsystem.getJoystick().getY() < .08) {
-      forearmSubsystem.ForearmMovement(-turn); 
+      forearmSubsystem.ForearmMovement(-turn * maxOutput); 
     }      
   }
 //hola j

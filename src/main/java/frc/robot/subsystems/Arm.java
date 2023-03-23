@@ -8,21 +8,19 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 
 public class Arm extends SubsystemBase {
+  // declara argumentos del brazo
   private Joystick joystick;
-  CANSparkMax motor = new CANSparkMax(Constants.IDcan.Arm.kARM_Motor, MotorType.kBrushed);
-  
-  Gyro gyro;
+  private CANSparkMax motor = new CANSparkMax(Constants.IDcan.Arm.kARM_Motor, MotorType.kBrushed);
 
-  /** Creates a new IntakeWheels. */
+  // crea clase joystick del brazo
   public Arm(Joystick joystick) {
     this.joystick = joystick;
   }
@@ -32,14 +30,22 @@ public class Arm extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  // devolver joystick que usa el brazo 
   public Joystick getJoystick(){
     return joystick;
   }
 
+  // metodo para mover el brazo
   public void ArmMovement(double turn){
     this.motor.set(turn);
   }
 
+  // metodo log
+  public void log () {
+    SmartDashboard.putNumber("motor brazo temperatura :", motor.getMotorTemperature());
+  }
+
+  // metodo apagar del motor brazo
   public void stop(){
     motor.stopMotor();
   }

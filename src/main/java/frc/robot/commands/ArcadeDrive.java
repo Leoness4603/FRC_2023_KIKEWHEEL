@@ -4,10 +4,7 @@
 
 package frc.robot.commands;
 
-import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
-
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
 
@@ -15,7 +12,6 @@ public class ArcadeDrive extends CommandBase {
   /** Creates a new ArcadeDrive. */
   private final Chassis chassisSubsystem;
   private Joystick joy;
-  private XboxController xboxController;
 
   public ArcadeDrive(Chassis chassisSubsystem, Joystick joy) {
     this.chassisSubsystem = chassisSubsystem;
@@ -36,10 +32,7 @@ public class ArcadeDrive extends CommandBase {
     }else{
       chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * .45, .65);
     }*/
-    if(joy.getRawAxis(3) < 1){
-      chassisSubsystem.driveA(-joy.getRawAxis(1) * .6, joy.getRawAxis(4), 1);
-    }else{chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * 1.3, 0.6);
-  }
+    chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), 1) ;
 }  
 
   // Called once the command ends or is interrupted.

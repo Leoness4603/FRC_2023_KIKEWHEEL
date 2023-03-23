@@ -6,10 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Arm;
+import frc.robot.Constants.SubsystemMaxOutput;
 
 public class MoveArm extends CommandBase {
   private Arm armSubsystem;
   private double turn;
+  private double maxOutput;
 
   /** Creates a new SpinIntakeWheels. */
   public MoveArm(Arm armSubsystem) {
@@ -25,9 +27,10 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      turn = armSubsystem.getJoystick().getY() * .8;
+      turn = armSubsystem.getJoystick().getY();
+      maxOutput = SubsystemMaxOutput.kArm_MaxOutput;
       if (armSubsystem.getJoystick().getY() > .08 || armSubsystem.getJoystick().getY() < .08) {
-        armSubsystem.ArmMovement(-turn); 
+        armSubsystem.ArmMovement(-turn * maxOutput); 
       }
   }
 

@@ -4,13 +4,9 @@
 
 package frc.robot.commands.Auto;
 
-import javax.swing.text.Position;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.Forearm;
 
 public class AutonomusDrive extends CommandBase {
   /** Creates a new ForearmGoToPosition. */
@@ -32,12 +28,11 @@ public class AutonomusDrive extends CommandBase {
   }
 
   public void driveAuto(){
-    ChassisSubssystem.driveA(1, 0, 0.3);
-    ChassisSubssystem.stop();
+    ChassisSubssystem.driveA(1, 0, 0.5);
   }
 
   public void turnAuto(){
-    ChassisSubssystem.driveA(0, 1, .6);
+    ChassisSubssystem.driveA(0, 1, .5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,7 +40,7 @@ public class AutonomusDrive extends CommandBase {
   public void execute() {
   if(timer.get() < 3){
     driveAuto();
-  }else if (timer.get() < 6 && timer.get() >3){
+  }else if (timer.get() < 6){
     ChassisSubssystem.driveA(-1, 0, 0.3);
   }else if(timer.get() > 6){
     ChassisSubssystem.stop();
