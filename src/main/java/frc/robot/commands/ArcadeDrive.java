@@ -27,12 +27,12 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /*if (joy.getRawAxis(3) > 0) {
-      chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * .45, 1);
+    if (joy.getRawAxis(3) > 0) {
+      chassisSubsystem.driveA(joy.getRawAxis(1), joy.getRawAxis(4), 1);
     }else{
-      chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4) * .45, .65);
-    }*/
-    chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), 1) ;
+      chassisSubsystem.driveA(joy.getRawAxis(1), joy.getRawAxis(4) , .5);
+    }
+    //chassisSubsystem.driveA(-joy.getRawAxis(1), joy.getRawAxis(4), 1) ;
 }  
 
   // Called once the command ends or is interrupted.

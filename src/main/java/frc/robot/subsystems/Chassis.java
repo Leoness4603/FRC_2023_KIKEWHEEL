@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -16,21 +19,18 @@ import frc.robot.Constants.IDcan;
 import frc.robot.Constants.kChassis;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Chassis extends SubsystemBase {
   /** Creates a new Chassis. */
   // declara argumentos del chassis
-  WPI_VictorSPX m_rear_left = new WPI_VictorSPX(Constants.IDcan.Chassis.m_rear_left);
+  CANSparkMax m_bhnd_right = new CANSparkMax(IDcan.Chassis.m_bhnd_right, MotorType.kBrushed);
+  WPI_VictorSPX m_rear_left = new WPI_VictorSPX(IDcan.Chassis.m_rear_left);
   WPI_VictorSPX m_bhnd_left = new WPI_VictorSPX(Constants.IDcan.Chassis.m_bhnd_left);
   WPI_VictorSPX m_rear_right = new WPI_VictorSPX(Constants.IDcan.Chassis.m_rear_right);
-  CANSparkMax m_bhnd_right = new CANSparkMax(IDcan.Chassis.m_bhnd_right, MotorType.kBrushed);
+  
   
   PIDController controllerChassis = new PIDController(kChassis.PIDValues.kP, kChassis.PIDValues.kI, kChassis.PIDValues.kD);
   
-  AHRS ahrs;
 
   PowerDistribution PDP = new PowerDistribution(0, ModuleType.kCTRE);
 
@@ -47,12 +47,8 @@ public class Chassis extends SubsystemBase {
     leftMotors.setInverted(true);
     rightMotors.setInverted(false);
 
-    drive = new DifferentialDrive(leftMotors, rightMotors);
+    DifferentialDrive drive = new DifferentialDrive(leftMotors, rightMotors);
 
-    ahrs = new AHRS(SPI.Port.kMXP);
-    ahrs.calibrate();
-
-  }
 
   @Override
   public void periodic() {
@@ -60,9 +56,7 @@ public class Chassis extends SubsystemBase {
     log();
   }
 
-  public double getAngle() {
-    return ahrs.getAngle();
-  }
+  
 
   public void setPoint(double setPoint) {
     controllerChassis.setSetpoint(setPoint);
@@ -79,7 +73,7 @@ public class Chassis extends SubsystemBase {
   }
 
   public void log() {
-    SmartDashboard.putBoolean("navX conectado", ahrs.isConnected());
+    SmartDashboard.putBoolean("navX conectado", false);
     SmartDashboard.putNumber("Total Current:", PDP.getTotalCurrent());
   }
   
@@ -87,4 +81,5 @@ public class Chassis extends SubsystemBase {
     this.drive.stopMotor();
   }
 }
+
 

@@ -14,7 +14,7 @@ public class Claw extends SubsystemBase {
   /** Creates a new Claw. */
   // declara argumentos de la garra
   private Spark clawMotor = new Spark(IoPWM.Claw.kCLAW_Motor);
-  private double Speed = .99;
+  private double Speed = .9;
   private double maxOutput = Constants.SubsystemMaxOutput.kClaw_MaxOutput;
   private Joystick firstTrigger;
   private Joystick secondTrigger;

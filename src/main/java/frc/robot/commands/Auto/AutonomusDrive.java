@@ -6,17 +6,23 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Arm;
 import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.Claw;
 
 public class AutonomusDrive extends CommandBase {
   /** Creates a new ForearmGoToPosition. */
- private final Chassis ChassisSubssystem;
-  Chassis chassis;
-  Timer timer;
+  private final Chassis ChassisSubsystem;
+  private final Arm armSubsystem;
+  private final Claw clawSubsystem;
+  Timer timer = new Timer();
+  Boolean finish = false;
 
-  public AutonomusDrive(Chassis chassisSubsystem){
-    this.ChassisSubssystem = chassisSubsystem;
-    addRequirements(chassisSubsystem);
+  public AutonomusDrive(Chassis chassisSubsystem, Arm armSubsytem, Claw clawSubsystem){
+    this.ChassisSubsystem = chassisSubsystem;
+    this.armSubsystem = armSubsytem;
+    this.clawSubsystem = clawSubsystem;
+    addRequirements(chassisSubsystem,  armSubsytem, clawSubsystem);
     } 
     // Use  addRequirements() here to declare subsystem dependencies.
  
@@ -27,36 +33,50 @@ public class AutonomusDrive extends CommandBase {
     timer.start();
   }
 
-  public void driveAuto(){
-    ChassisSubssystem.driveA(1, 0, 0.5);
+  public void driveAuto(double movement){
+    ChassisSubsystem.driveA(movement, 0, 0.4);
   }
 
-  public void turnAuto(){
-    ChassisSubssystem.driveA(0, 1, .5);
+  public void turnAuto(double turn){
+    ChassisSubsystem.driveA(0, turn, .5);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  public void ArmMovementAuto(double ArmMovement) {
+    armSubsystem.ArmMovement(ArmMovement);
+  }
+
+  public void clawOpenAuto() {
+    clawSubsystem.open();
+  }
+
   @Override
   public void execute() {
-  if(timer.get() < 3){
-    driveAuto();
-  }else if (timer.get() < 6){
-    ChassisSubssystem.driveA(-1, 0, 0.3);
-  }else if(timer.get() > 6){
-    ChassisSubssystem.stop();
+    while(timer.get() < 2){
+      ArmMovementAuto(.6);
+    }
+    while(timer.get() > 2 && timer.get() < 4){
+      driveAuto(1);
+    }
+    while (timer.get() > 4 && timer.get() < 5){
+      clawOpenAuto();
+    }
+    while (timer.get() > 5 && timer.get() < 8.5){
+      driveAuto(-1);
+    }
+    finish = true;
   }
-  }
-  
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    ChassisSubssystem.stop();
+    ChassisSubsystem.stop();
+    armSubsystem.stop();
+    clawSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.get() > 15;
+    return finish;
   }
 }

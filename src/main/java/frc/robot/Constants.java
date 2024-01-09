@@ -10,9 +10,9 @@ public final class Constants {
   //Constantes de las salidas maximas en los subsistemas
   public final static class SubsystemMaxOutput {
     // multiplicadres de los sistemas rango(-1, 1)
-    public final static double kArm_MaxOutput = .6 ;
-    public final static double kChassis_MaxOutput = .99;
-    public final static double kClaw_MaxOutput = .75;
+    public final static double kArm_MaxOutput = .5 ;
+    public final static double kChassis_MaxOutput = .50;
+    public final static double kClaw_MaxOutput = .4;
     public final static double kForearm_MaxOutput = .99;
   }
   //Constantes en el IdCAN de controladores
